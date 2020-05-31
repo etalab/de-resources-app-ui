@@ -20,7 +20,7 @@ class SearchBar extends Component {
         <input
           className={"form-control mr-sm-2"}
           type={"search"}
-          placeholder={"Search"}
+          placeholder={"Rechercher"}
           aria-label={"Search"}
           value={this.state.term}
           onChange={event => this.onInputChange(event.target.value)}
