@@ -1,10 +1,8 @@
 import React from "react";
-import {Link} from 'react-router-dom'
 
 const ResultListItem = ({ result, onResultSelect }) => {
   console.log(result._source)
   const resource_id = result._source.resource_id;
-  const elk_id = result._id;
   const dataset_id = result._source.dataset_id;
   const dataset_title = result._source.dataset_title;
   const title = result._source.title;

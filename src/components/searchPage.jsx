@@ -22,8 +22,7 @@ class SearchPage extends Component {
       headerValue: "",
       columnsTypes: "",
       anywhereValue: "",
-      nbResults: null,
-      toto: "tutu"
+      nbResults: null
     };
 
     this.eSearch("");

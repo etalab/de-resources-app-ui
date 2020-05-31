@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import elasticsearch from "elasticsearch";
-import _ from "lodash";
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
+
 
 const ELK_SECRET = process.env.REACT_APP_ELK_SECRET;
 const ELK_URL = process.env.REACT_APP_ELK_URL;
@@ -17,8 +19,7 @@ class ResourcePage extends Component {
 
     this.state = {
       myresource: [],
-      tutu: [{'toto':'tutu'}],
-      some: ""
+      codeDepartement: []
     };
 
     console.log(this.props.match.params.resource_id)
@@ -26,6 +27,9 @@ class ResourcePage extends Component {
     console.log("pour test")
   }
 
+  toto(){
+    return "Coucou"
+  }
   resultSearch(myid){
      // pin client
      client.ping(
@@ -54,15 +58,35 @@ class ResourcePage extends Component {
       client.search({ index: "csvresource", body:bodysearch, size: searchSize }).then(
         body => {
           let esResults = body.hits.hits;
-          console.log(body.hits.hits[0])
           this.setState({ myresource: esResults });
+          
+          let inter = []
+          esResults[0]._source.header.forEach(function(head){
+            let jsonhead = { head: head.replace(new RegExp("\"", "g"), ''), detect: false}
+            inter.push(jsonhead)
+          });
+
+
+  
+          if(esResults[0]._source.code_departement !== undefined){
+            inter.forEach(function(obj){
+              if(obj.head == esResults[0]._source.code_departement[0]){
+                obj.detect = true
+              }
+            })
+
+          }
+
+          this.setState({codeDepartement: inter});
+
+          console.log("State :")
+          console.log(this.state)
+
         },
         error => {
           console.trace(error.message);
         }
       );
-  
-      console.log(this.state)
   }
 
   render() {
@@ -74,7 +98,18 @@ class ResourcePage extends Component {
               <div className="title-dataset">{resource._source.dataset_title}</div>
               <div className="title-resource">Resource : {resource._source.title}</div>
               <br></br><br></br>
-              <div>Header : {resource._source.header.map(hihi => (<span>{hihi} ; </span>))}</div>
+
+              <div>Header : {this.state.codeDepartement.map(column => (
+                <span>
+                  {column.detect ? 
+                  <Tooltip title="Il semble que cela soit un code département" placement="top">
+                    <Button variant="contained" color="secondary">{column.head}</Button>
+                  </Tooltip>
+                  : 
+                  <Button variant="contained" color="primary">{column.head}</Button>
+                  }&nbsp;&nbsp;
+                </span>
+              ))}</div>
               <br></br>
               <div className="button-quality">
                 <button>Voir les ressources similaires</button>  <button>Enrichir la ressource</button>   <button>Créer un schéma</button>   <button>Analyse Qualité</button>
