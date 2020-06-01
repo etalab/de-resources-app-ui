@@ -25,11 +25,27 @@ class ResourcePage extends Component {
     console.log(this.props.match.params.resource_id)
     this.resultSearch(this.props.match.params.resource_id);
     console.log("pour test")
+
+    this.handleEnrich = this.handleEnrich.bind(this);
   }
 
-  toto(){
-    return "Coucou"
+  handleEnrich(){
+    console.log("Coucou")
+
+    fetch('http://backend.dataeng.etalab.studio/enrich', {
+        method: "POST",
+        contentType: "application/json; charset=utf-8",
+        // contentType: "application/x-www-form-urlencoded",
+        body: JSON.stringify({
+            "dep": this.state.codeDepartement,
+        })
+    })
+        .then(response => console.log(response))
+        .catch(err => console.log(err))
+
+
   }
+
   resultSearch(myid){
      // pin client
      client.ping(
@@ -103,16 +119,16 @@ class ResourcePage extends Component {
                 <span>
                   {column.detect ? 
                   <Tooltip title="Il semble que cela soit un code département" placement="top">
-                    <Button variant="contained" color="secondary">{column.head}</Button>
+                    <button  type="button" className="btn btn-warning">{column.head}</button>
                   </Tooltip>
                   : 
-                  <Button variant="contained" color="primary">{column.head}</Button>
+                  <button  type="button" className="btn btn-primary">{column.head}</button>
                   }&nbsp;&nbsp;
                 </span>
               ))}</div>
               <br></br>
               <div className="button-quality">
-                <button>Voir les ressources similaires</button>  <button>Enrichir la ressource</button>   <button>Créer un schéma</button>   <button>Analyse Qualité</button>
+                <button>Voir les ressources similaires</button>  <button onClick={this.handleEnrich} type="button" className="btn btn-info">Enrichir la ressource</button>   <button>Créer un schéma</button>   <button>Analyse Qualité</button>
               </div>
               <br></br><br></br>
               Aperçu des données :
