@@ -7,7 +7,7 @@ import { ThemeProvider } from "@material-ui/core";
 
 const ELK_SECRET = process.env.REACT_APP_ELK_SECRET;
 const ELK_URL = process.env.REACT_APP_ELK_URL;
-
+const URL_BACK = process.env.REACT_APP_URL_BACK;
 
 let client = new elasticsearch.Client({ host: ELK_URL, httpAuth: ELK_SECRET, log: "error" });
 
@@ -38,7 +38,7 @@ class ResourcePage extends Component {
   }
 
   handleEnrich(){
-    fetch('http://backend.dataeng.etalab.studio/enrich', {
+    fetch(URL_BACK+'/enrich', {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         // contentType: "application/x-www-form-urlencoded",
@@ -51,7 +51,7 @@ class ResourcePage extends Component {
         .then(data => {
           console.log(data);
           this.setState({rep: data});
-          this.setState({iframeurl: "https://www.data.gouv.fr/tabular/preview/?url=http://backend.dataeng.etalab.studio/static/"+data['new_url']})
+          this.setState({iframeurl: "https://www.data.gouv.fr/tabular/preview/?url="+URL_BACK+"/static/"+data['new_url']})
          }
         )
         .catch(err => console.log(err))

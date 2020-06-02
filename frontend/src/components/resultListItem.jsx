@@ -1,5 +1,7 @@
 import React from "react";
 
+const URL_FRONT = process.env.REACT_APP_URL_FRONT;
+
 const ResultListItem = ({ result, onResultSelect }) => {
   console.log(result._source)
   const resource_id = result._source.resource_id;
@@ -22,7 +24,7 @@ const ResultListItem = ({ result, onResultSelect }) => {
                 <h6 className={"mt-0"} style={{fontStyle: "italic"}}>{title}</h6>
               </div>
               <div style={{float: 'left', width: '10%', textAlign: 'right'}}>
-                <a href={"http://recherche.dataeng.etalab.studio/resource/"+resource_id} target="_blank" >
+                <a href={URL_FRONT+"/resource/"+resource_id} target="_blank" >
                   <button type="button" className="btn btn-info">Inspecter</button>
                 </a>
               </div>
