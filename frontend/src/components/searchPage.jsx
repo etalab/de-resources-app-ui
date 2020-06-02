@@ -58,7 +58,6 @@ class SearchPage extends Component {
     if(anywhereVal !== undefined && anywhereVal !== ""){
       if(headerVal !== undefined && headerVal !== ""){
         if(colVal !== undefined && colVal !== ""){
-          console.log("geof")
           this.setState({ results: []})
           //3 remplis
           bodysearch = {
@@ -135,7 +134,6 @@ class SearchPage extends Component {
           }
         }else{
           //any
-          console.log("oopopopo")
           bodysearch = {
             query: {
               bool: {
@@ -220,8 +218,6 @@ class SearchPage extends Component {
         console.trace(error.message);
       }
     );
-
-    console.log(this.state)
   }
 
   render() {

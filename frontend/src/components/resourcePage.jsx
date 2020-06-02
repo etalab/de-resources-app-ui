@@ -27,7 +27,6 @@ class ResourcePage extends Component {
 
     console.log(this.props.match.params.resource_id)
     this.resultSearch(this.props.match.params.resource_id);
-    console.log("pour test")
 
     this.handleEnrich = this.handleEnrich.bind(this);
     this.checkTest = this.checkTest.bind(this);
@@ -107,10 +106,6 @@ class ResourcePage extends Component {
           }
 
           this.setState({codeDepartement: inter});
-
-          console.log("State :")
-          console.log(this.state)
-
         },
         error => {
           console.trace(error.message);
@@ -144,7 +139,6 @@ class ResourcePage extends Component {
                 <button>Voir les ressources similaires</button>  <button onClick={this.handleEnrich} type="button" className="btn btn-info">Enrichir la ressource</button>   <button>Créer un schéma</button>   <button>Analyse Qualité</button>
               </div>
               <br></br><br></br>
-              <button onClick={this.checkTest}>toto</button>
               Aperçu des données :
               <br></br>
               <div><iframe src={this.state.iframeurl} width="100%" height="1000"></iframe></div>

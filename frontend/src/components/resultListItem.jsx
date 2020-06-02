@@ -12,7 +12,6 @@ const ResultListItem = ({ result, onResultSelect }) => {
   if (result._source.header) {
     listHeaders = result._source.header.map(function(item){ return <span>{item} - </span>});
   }
-  console.log(listHeaders);
   return (
     <li className="list-group-item">
       <div className="result-list media">
