@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import elasticsearch from "elasticsearch";
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import { ThemeProvider } from "@material-ui/core";
 
 
 const ELK_SECRET = process.env.REACT_APP_ELK_SECRET;
@@ -19,7 +20,9 @@ class ResourcePage extends Component {
 
     this.state = {
       myresource: [],
-      codeDepartement: []
+      codeDepartement: [],
+      rep: [],
+      iframeurl: ""
     };
 
     console.log(this.props.match.params.resource_id)
@@ -27,20 +30,30 @@ class ResourcePage extends Component {
     console.log("pour test")
 
     this.handleEnrich = this.handleEnrich.bind(this);
+    this.checkTest = this.checkTest.bind(this);
+  }
+
+  checkTest(){
+    console.log(this.state)
   }
 
   handleEnrich(){
-    console.log("Coucou")
-
     fetch('http://backend.dataeng.etalab.studio/enrich', {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         // contentType: "application/x-www-form-urlencoded",
         body: JSON.stringify({
             "dep": this.state.codeDepartement,
+            "url": this.state.myresource[0]._source.resource_url
         })
     })
-        .then(response => console.log(response))
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          this.setState({rep: data});
+          this.setState({iframeurl: "https://www.data.gouv.fr/tabular/preview/?url=http://backend.dataeng.etalab.studio/static/"+data['new_url']})
+         }
+        )
         .catch(err => console.log(err))
 
 
@@ -75,7 +88,7 @@ class ResourcePage extends Component {
         body => {
           let esResults = body.hits.hits;
           this.setState({ myresource: esResults });
-          
+          this.setState({iframeurl: "https://www.data.gouv.fr/tabular/preview/?url="+esResults[0]._source.resource_url});
           let inter = []
           esResults[0]._source.header.forEach(function(head){
             let jsonhead = { head: head.replace(new RegExp("\"", "g"), ''), detect: false}
@@ -131,9 +144,10 @@ class ResourcePage extends Component {
                 <button>Voir les ressources similaires</button>  <button onClick={this.handleEnrich} type="button" className="btn btn-info">Enrichir la ressource</button>   <button>Créer un schéma</button>   <button>Analyse Qualité</button>
               </div>
               <br></br><br></br>
+              <button onClick={this.checkTest}>toto</button>
               Aperçu des données :
               <br></br>
-              <div><iframe src={"https://www.data.gouv.fr/tabular/preview/?url="+resource._source.resource_url} width="100%" height="1000"></iframe></div>
+              <div><iframe src={this.state.iframeurl} width="100%" height="1000"></iframe></div>
               
             </div>
           ))}
